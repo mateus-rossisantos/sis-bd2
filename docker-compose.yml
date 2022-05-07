@@ -1,4 +1,12 @@
 #docker-compose up
+version: "3.0"
+
+networks:
+  mynet:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 10.2.0.0/16
 
 services:
   php:
@@ -10,6 +18,9 @@ services:
       - ./public:/var/www/html
     links:
       - db
+    networks:
+        mynet:
+            ipv4_address: 10.2.0.2
   db:
     image: mysql:8
     ports:
@@ -19,6 +30,9 @@ services:
     environment:
       - MYSQL_DATABASE=db_app_db2
       - MYSQL_ROOT_PASSWORD=123456
+    networks:
+        mynet:
+            ipv4_address: 10.2.0.3
 
 # Backup:
 # docker exec CONTAINER /usr/bin/mysqldump -u root --password=root DATABASE > backup.sql
